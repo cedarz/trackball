@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 #include <string.h> // memcpy
+#include <glad/glad.h>
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp> // value_ptr

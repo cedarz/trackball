@@ -212,6 +212,10 @@ int RenderWindowGLFW::run(int width, int height)
         goto recover;
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); //GLFW_OPENGL_CORE_PROFILE);
+
     mWindow = glfwCreateWindow(width, height, "TrackBall GLFW Example",
                                NULL, NULL);
     if (!mWindow)
@@ -225,6 +229,23 @@ int RenderWindowGLFW::run(int width, int height)
 
     glfwMakeContextCurrent(mWindow);
     glfwSwapInterval(1);
+
+    //glewInit();
+    gladLoadGL();
+
+    const char* v = (const char*)glGetString(GL_VERSION);
+    std::cout << v << std::endl;
+    int num_ext = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &num_ext);
+    int NumberOfTextureUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &NumberOfTextureUnits);
+    for (int i = 0; i < num_ext; i++)
+    {
+        if (!strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_ARB_compatibility"))
+        {
+            printf("Compatiblity Profile\n");
+        }
+    }
 
     glfwSetCursorPosCallback(mWindow, & RenderWindowGLFW::moveCallback);
     glfwSetKeyCallback(mWindow, & RenderWindowGLFW::keyCallback);

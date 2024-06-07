@@ -1,4 +1,4 @@
-![Alt text](examples/glfw/img/example.gif?raw=true "Example Motions")
+![Alt text](demo/img/example.gif?raw=true "Example Motions")
 
 ## Overview
 

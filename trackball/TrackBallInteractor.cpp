@@ -113,7 +113,7 @@ void TrackBallInteractor::computeRotationBetweenVectors(
     const glm::vec3 & u, const glm::vec3 & v, glm::quat & result)
 {
  	float cosTheta = glm::dot(u, v);
-    glm::vec3 rotationAxis(glm::uninitialize);
+    glm::vec3 rotationAxis;
     static const float EPSILON = 1.0e-5f;
 
  	if (cosTheta < -1.0f + EPSILON){
@@ -198,7 +198,7 @@ void TrackBallInteractor::dragArc()
 
 void TrackBallInteractor::dragFirstPerson()
 {
-    glm::vec3 pan(glm::uninitialize);
+    glm::vec3 pan;
     computePan(pan);
     mCamera->setCenter(pan + mCamera->getCenter());
     mCamera->update();
@@ -207,7 +207,7 @@ void TrackBallInteractor::dragFirstPerson()
 
 void TrackBallInteractor::dragPan()
 {
-    glm::vec3 pan(glm::uninitialize);
+    glm::vec3 pan;
     computePan(pan);
     mCamera->setCenter(pan + mCamera->getCenter());
     mCamera->setEye(pan + mCamera->getEye());
@@ -405,12 +405,12 @@ void TrackBallInteractor::update()
 void TrackBallInteractor::updateCameraEyeUp(bool eye, bool up)
 {
     if (eye) {
-        glm::vec3 eye(glm::uninitialize);
+        glm::vec3 eye;
         computeCameraEye(eye);
         mCamera->setEye(eye);
     }
     if (up) {
-        glm::vec3 up(glm::uninitialize);
+        glm::vec3 up;
         computeCameraUp(up);
         mCamera->setUp(up);
     }
