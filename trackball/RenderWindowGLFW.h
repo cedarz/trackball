@@ -4,8 +4,9 @@
 #include <GLFW/glfw3.h>
 
 #include "TrackBallInteractor.h"
-#include "RendererOpenGL1.h"
+#include "Renderer.h"
 #include "Animator.h"
+#include <memory>
 
 namespace rsmz
 {
@@ -23,6 +24,8 @@ public:
 	static RenderWindowGLFW & instance();
 	int run(int width, int height);
 
+    void setRenderer(Renderer* render);
+
 	static void buttonCallback(GLFWwindow *window, int button, int action,
                                int mods);
 	static void errorCallback(int error, const char* description);
@@ -36,7 +39,7 @@ private:
     Animator mAnimator;
 	Camera mCamera;
 	TrackBallInteractor mInteractor;
-	RendererOpenGL1 mRenderer;
+    Renderer* mRenderer;
     GLFWwindow *mWindow;
 };
 

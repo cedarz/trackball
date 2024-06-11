@@ -170,16 +170,20 @@ void RendererOpenGL1::renderGrid()
         } else {
             WHITE();
         }
-		glVertex3f(p, mn, eps);
-		glVertex3f(p, mx, eps);
+		//glVertex3f(p, mn, eps);
+		//glVertex3f(p, mx, eps);
+        glVertex3f(p, eps, mn);
+        glVertex3f(p, eps, mx);
 
         if (i == 0 || i == 10 || i == n) {
             glColor4f(1.f, 0.f, 0.f, .3f);
         } else {
             WHITE();
         }
-		glVertex3f(mn, p, eps);
-		glVertex3f(mx, p, eps);
+		/*glVertex3f(mn, p, eps);
+		glVertex3f(mx, p, eps);*/
+        glVertex3f(mn, eps, p);
+        glVertex3f(mx, eps, p);
 	}
 
 	glEnd();

@@ -195,7 +195,7 @@ void RenderWindowGLFW::scrollCallback(GLFWwindow *window, double xpos,
 
 void RenderWindowGLFW::sizeCallback(GLFWwindow *window, int width, int height)
 {
-    instance().mRenderer.resize(width, height);
+    instance().mRenderer->resize(width, height);
     instance().mInteractor.setScreenSize(width, height);
     instance().mAnimator.setScreenSize(width, height);
 }
@@ -254,16 +254,16 @@ int RenderWindowGLFW::run(int width, int height)
     glfwSetWindowSizeCallback(mWindow, &RenderWindowGLFW::sizeCallback);
 
     mInteractor.setCamera(& mCamera);
-    mRenderer.setCamera(& mCamera);
+    mRenderer->setCamera(& mCamera);
     mAnimator.setInteractor(& mInteractor);
-    mRenderer.init();
+    mRenderer->init();
     sizeCallback(mWindow, width, height); // Set initial size.
 
     while (!glfwWindowShouldClose(mWindow))
     {
-        mAnimator.animate();
+        //mAnimator.animate();
         mInteractor.update();
-        mRenderer.render();
+        mRenderer->render();
         glfwSwapBuffers(mWindow);
         glfwPollEvents();
     }
@@ -276,26 +276,9 @@ recover:
     return exitcode;
 }
 
+void RenderWindowGLFW::setRenderer(Renderer* render)
+{
+    mRenderer = render;
+}
+
 } // end namespace rsmz
-
-/*
-    LICENSE BEGIN
-
-    trackball - A 3D view interactor for C++ programs.
-    Copyright (C) 2016  Remik Ziemlinski
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-    LICENSE END
-*/

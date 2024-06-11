@@ -1,31 +1,35 @@
-#ifndef RSMZ_RENDERER_H
-#define RSMZ_RENDERER_H
+#ifndef RSMZ_RENDEREROPENGL1_H
+#define RSMZ_RENDEREROPENGL1_H
 
-// #include <GL/glew.h>
+#include "Renderer.h"
 
-#include "Camera.h"
 
 namespace rsmz
 {
-class Renderer
+
+class RendererOpenGL1 : public Renderer
 {
 public:
-	Renderer();
-	virtual ~Renderer();
+	RendererOpenGL1();
+	virtual ~RendererOpenGL1();
 
-	virtual void render() = 0;
-
-	void setCamera(Camera *c);
-    const Camera* getCamera();
+	virtual void init();
+	virtual void render();
+	void renderAxes();
+    void renderCenter();
+	void renderClear();
+	void renderCube();
+	void renderGrid();
+	void renderObjects();
+	virtual void resize(int width, int height);
 
 protected:
-	Camera *mCamera;
-
-}; // end class Renderer
+    glm::mat4 mProjection;
+};
 
 } // end namespace rsmz
 
-#endif // RSMZ_RENDERER_H
+#endif // RSMZ_RENDEREROPENGL1_H
 
 /*
     LICENSE BEGIN

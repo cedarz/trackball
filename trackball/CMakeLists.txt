@@ -1,3 +1,6 @@
 include_directories("D:/vcpkg/installed/x64-windows/include")
-set(SRC_FILES Camera.cpp TrackBallInteractor.cpp)
+# set(LIBS ${LIBS} ${GLFW_LIBRARY} src examples)
+link_directories("D:/vcpkg/installed/x64-windows/debug/lib")
+file(GLOB SRC_FILES *.h *.cpp )
+#set(SRC_FILES Camera.cpp TrackBallInteractor.cpp RenderWindowGLFW.cpp Animator.cpp Renderer.cpp)
 add_library(trackball ${SRC_FILES})
