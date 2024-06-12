@@ -15,7 +15,6 @@ public:
 
 	virtual void render() = 0;
     virtual void resize(int width, int height) = 0;
-    virtual void init() = 0;
 
 	void setCamera(Camera *c);
     const Camera* getCamera();

@@ -20,21 +20,32 @@ RendererOpenGL1::~RendererOpenGL1()
 {
 }
 
-void RendererOpenGL1::init()
-{
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-	// Enable transparency.
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
 void RendererOpenGL1::render()
 {
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+    // Enable transparency.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	renderClear();
 	renderObjects();
+}
+
+void RendererOpenGL1::resize(int width, int height)
+{
+    if (0 == height) {
+        height = 1; // Avoid division by zero.
+    }
+
+    GLfloat ratio = width / (GLfloat)height;
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    mProjection = glm::perspective(glm::radians(45.0f), ratio, .01f, 100.f);
 }
 
 void RendererOpenGL1::renderCenter()
@@ -188,20 +199,6 @@ void RendererOpenGL1::renderGrid()
 
 	glEnd();
     #undef WHITE
-}
-
-void RendererOpenGL1::resize(int width, int height)
-{
-	if (0 == height) {
-		height = 1; // Avoid division by zero.
-	}
-
-	GLfloat ratio = width / (GLfloat) height;
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-    mProjection = glm::perspective(glm::radians(45.0f), ratio, .01f, 100.f);
 }
 
 } // end namespace rsmz

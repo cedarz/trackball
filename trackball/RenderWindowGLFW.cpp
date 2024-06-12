@@ -21,9 +21,64 @@ static const char* HELP =
     " Right-Click: Roll\n"
     "Scroll-Wheel: Dolly (zoom)\n";
 
+RenderWindowGLFW* g_render_window = nullptr;
+
 RenderWindowGLFW::RenderWindowGLFW() :
     mWindow(0)
 {
+}
+
+void RenderWindowGLFW::init(int width, int height)
+{
+    glfwSetErrorCallback(& RenderWindowGLFW::errorCallback);
+
+    if (!glfwInit())
+    {
+        exit(-1);
+    }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); //GLFW_OPENGL_CORE_PROFILE);
+
+    mWindow = glfwCreateWindow(width, height, "TrackBall GLFW Example",
+                               NULL, NULL);
+    if (!mWindow)
+    {
+        exit(-1);
+    }
+
+    std::cout << HELP;
+
+    glfwMakeContextCurrent(mWindow);
+    glfwSwapInterval(1);
+
+    gladLoadGL();
+
+    const char* v = (const char*)glGetString(GL_VERSION);
+    std::cout << v << std::endl;
+    int num_ext = 0;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &num_ext);
+    int NumberOfTextureUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &NumberOfTextureUnits);
+    for (int i = 0; i < num_ext; i++)
+    {
+        if (!strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_ARB_compatibility"))
+        {
+            printf("Compatiblity Profile\n");
+        }
+    }
+
+    glfwSetCursorPosCallback(mWindow, & RenderWindowGLFW::moveCallback);
+    glfwSetKeyCallback(mWindow, & RenderWindowGLFW::keyCallback);
+    glfwSetMouseButtonCallback(mWindow, & RenderWindowGLFW::buttonCallback);
+    glfwSetScrollCallback(mWindow, & RenderWindowGLFW::scrollCallback);
+    glfwSetWindowSizeCallback(mWindow, &RenderWindowGLFW::sizeCallback);
+
+    mInteractor.setCamera(& mCamera);
+    mRenderer->setCamera(& mCamera);
+    mAnimator.setInteractor(& mInteractor);
+    sizeCallback(mWindow, width, height); // Set initial size.
 }
 
 RenderWindowGLFW::~RenderWindowGLFW()
@@ -80,7 +135,7 @@ void RenderWindowGLFW::errorCallback(int error, const char* description)
     std::cerr << description << std::endl;
 }
 
-RenderWindowGLFW & RenderWindowGLFW::instance()
+RenderWindowGLFW& RenderWindowGLFW::instance()
 {
 	static RenderWindowGLFW i;
 	return i;
@@ -200,65 +255,8 @@ void RenderWindowGLFW::sizeCallback(GLFWwindow *window, int width, int height)
     instance().mAnimator.setScreenSize(width, height);
 }
 
-int RenderWindowGLFW::run(int width, int height)
+void RenderWindowGLFW::run()
 {
-    int exitcode = EXIT_SUCCESS;
-
-    glfwSetErrorCallback(& RenderWindowGLFW::errorCallback);
-
-    if (!glfwInit())
-    {
-        exitcode = EXIT_FAILURE;
-        goto recover;
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); //GLFW_OPENGL_CORE_PROFILE);
-
-    mWindow = glfwCreateWindow(width, height, "TrackBall GLFW Example",
-                               NULL, NULL);
-    if (!mWindow)
-    {
-        glfwTerminate();
-        exitcode = EXIT_FAILURE;
-        goto recover;
-    }
-
-    std::cout << HELP;
-
-    glfwMakeContextCurrent(mWindow);
-    glfwSwapInterval(1);
-
-    //glewInit();
-    gladLoadGL();
-
-    const char* v = (const char*)glGetString(GL_VERSION);
-    std::cout << v << std::endl;
-    int num_ext = 0;
-    glGetIntegerv(GL_NUM_EXTENSIONS, &num_ext);
-    int NumberOfTextureUnits = 0;
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &NumberOfTextureUnits);
-    for (int i = 0; i < num_ext; i++)
-    {
-        if (!strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), "GL_ARB_compatibility"))
-        {
-            printf("Compatiblity Profile\n");
-        }
-    }
-
-    glfwSetCursorPosCallback(mWindow, & RenderWindowGLFW::moveCallback);
-    glfwSetKeyCallback(mWindow, & RenderWindowGLFW::keyCallback);
-    glfwSetMouseButtonCallback(mWindow, & RenderWindowGLFW::buttonCallback);
-    glfwSetScrollCallback(mWindow, & RenderWindowGLFW::scrollCallback);
-    glfwSetWindowSizeCallback(mWindow, &RenderWindowGLFW::sizeCallback);
-
-    mInteractor.setCamera(& mCamera);
-    mRenderer->setCamera(& mCamera);
-    mAnimator.setInteractor(& mInteractor);
-    mRenderer->init();
-    sizeCallback(mWindow, width, height); // Set initial size.
-
     while (!glfwWindowShouldClose(mWindow))
     {
         //mAnimator.animate();
@@ -272,8 +270,6 @@ int RenderWindowGLFW::run(int width, int height)
 
     glfwTerminate();
 
-recover:
-    return exitcode;
 }
 
 void RenderWindowGLFW::setRenderer(Renderer* render)

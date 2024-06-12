@@ -13,15 +13,16 @@ public:
 	RendererOpenGL1();
 	virtual ~RendererOpenGL1();
 
-	virtual void init();
 	virtual void render();
+	virtual void resize(int width, int height);
+
+private:
 	void renderAxes();
-    void renderCenter();
+	void renderCenter();
 	void renderClear();
 	void renderCube();
 	void renderGrid();
 	void renderObjects();
-	virtual void resize(int width, int height);
 
 protected:
     glm::mat4 mProjection;

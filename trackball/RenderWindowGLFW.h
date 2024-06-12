@@ -22,7 +22,8 @@ public:
     ~RenderWindowGLFW();
 
 	static RenderWindowGLFW & instance();
-	int run(int width, int height);
+	void init(int width, int height);
+	void run();
 
     void setRenderer(Renderer* render);
 
